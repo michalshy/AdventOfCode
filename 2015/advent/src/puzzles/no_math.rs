@@ -12,7 +12,7 @@ pub struct NoMath {
     pub presents_params: PresentsParams,
 }
 impl NoMath {
-    pub fn solve_first(&mut self) -> Result<PresentsParams, Error>{
+    pub fn solve(&mut self) -> Result<PresentsParams, Error>{
         Self::read_file(self)?;
         for line in self.data_content.lines() {
             let mut dims = line.split('x');
@@ -20,7 +20,6 @@ impl NoMath {
                 dims.next().unwrap().parse().unwrap(),
                 dims.next().unwrap().parse().unwrap(),
                 dims.next().unwrap().parse().unwrap());
-            println!("{}", temp.length);
             self.presents_params.size += temp.size;
             self.presents_params.length += temp.length;
         }

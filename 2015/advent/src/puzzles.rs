@@ -1,9 +1,11 @@
 use std::io::Error;
 use not_quite_lisp::NotQuiteLisp;
 use no_math::NoMath;
+use perfectly_spherical_houses::PerfectHouses;
 
 mod not_quite_lisp;
 mod no_math;
+mod perfectly_spherical_houses;
 
 #[derive(Default)]
 pub struct Puzzles;
@@ -24,7 +26,7 @@ impl Puzzles {
                 },
                 _ => (),
             }
-            //second puzzle solved - 1 DAY
+            //second puzzle solved - 1st DAY
             let res2 = NotQuiteLisp::default().solve_second();
             match res2 {
                 Ok(floor) => {
@@ -34,17 +36,19 @@ impl Puzzles {
             }
         }
         {
-            //first pizzle - 2 DAY
-            let res1 = NoMath::default().solve_first();
-            match res1 {
+            //both puzzle - 2nd DAY
+            let res = NoMath::default().solve();
+            match res {
                 Ok(space) => {
                     println!("space needed for gifts is {}", space.size);
                     println!("length needed for gifts is {}", space.length);
                 },
                 _ => (),
             }
-            
-            
+        }
+        {
+            //puzzle - 3rd DAY
+            let res = PerfectHouses::default().solve_puzzle();
         }
         Ok(())
     }
