@@ -2,10 +2,12 @@ use std::io::Error;
 use not_quite_lisp::NotQuiteLisp;
 use no_math::NoMath;
 use perfectly_spherical_houses::PerfectHouses;
+use stocking_stuffer::StockStuff;
 
 mod not_quite_lisp;
 mod no_math;
 mod perfectly_spherical_houses;
+mod stocking_stuffer;
 
 #[derive(Default)]
 pub struct Puzzles;
@@ -47,8 +49,30 @@ impl Puzzles {
             }
         }
         {
-            //puzzle - 3rd DAY
+            //puzzles - 3rd DAY
             let res = PerfectHouses::default().solve_puzzle();
+            match res {
+                Ok(houses) => {
+                    println!("number of visited houses first year is {}", houses.0);
+                    println!("number of visited houses second year is {}", houses.1);
+                },
+                _ => (),
+            }
+        }
+        {
+            //puzzles - 4th DAY
+            let res = StockStuff::default().mine();
+            match res {
+                Ok(mine) => {
+                    if mine.1 == false {
+                        println!("lowest number to create md5 hash with 5 zeros is {}", mine.0);
+                    }
+                    else {
+                        println!("lowest number to create md5 hash with 5 was not found");
+                    }
+                },
+                _ => (),
+            }
         }
         Ok(())
     }
