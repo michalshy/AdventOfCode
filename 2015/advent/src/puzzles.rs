@@ -3,11 +3,13 @@ use not_quite_lisp::NotQuiteLisp;
 use no_math::NoMath;
 use perfectly_spherical_houses::PerfectHouses;
 use stocking_stuffer::StockStuff;
+use intern_elves::InternElves;
 
 mod not_quite_lisp;
 mod no_math;
 mod perfectly_spherical_houses;
 mod stocking_stuffer;
+mod intern_elves;
 
 #[derive(Default)]
 pub struct Puzzles;
@@ -60,16 +62,27 @@ impl Puzzles {
             }
         }
         {
-            //puzzles - 4th DAY
-            let res = StockStuff::default().mine();
+            // THIS IS LEGIT SOLUTION, COMMENTED CAUSE TAKES AGES TO BUILD
+            // //puzzles - 4th DAY
+            // let res = StockStuff::default().mine();
+            // match res {
+            //     Ok(mine) => {
+            //         if mine.1 == false {
+            //             println!("lowest number to create md5 hash with 5 zeros is {}", mine.0);
+            //         }
+            //         else {
+            //             println!("lowest number to create md5 hash with 5 was not found");
+            //         }
+            //     },
+            //     _ => (),
+            // }
+        }
+        {
+            //puzzles - 5th DAY
+            let res = InternElves::default().solve_puzzles();
             match res {
-                Ok(mine) => {
-                    if mine.1 == false {
-                        println!("lowest number to create md5 hash with 5 zeros is {}", mine.0);
-                    }
-                    else {
-                        println!("lowest number to create md5 hash with 5 was not found");
-                    }
+                Ok(number) => {
+                    println!("number of nice strings is {}", number);
                 },
                 _ => (),
             }
