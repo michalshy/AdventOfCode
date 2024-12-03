@@ -13,20 +13,40 @@ fn main() {
     
     let find_mul = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").unwrap();
     let negative_mul = Regex::new(r"don't\(\)(.*mul\(\d{1,3},\d{1,3}\).*)+do\(\)").unwrap();
-    let second_regex = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\)").unwrap();
+    let second_regex = Regex::new(r"mul\(\d{1,3},\d{1,3}\)|do\(\)|don't\(\)").unwrap();
     let regex = Regex::new(r"(\d{1,3}),(\d{1,3})").unwrap();
+    let do_reg = Regex::new(r"do\(\)").unwrap();
+    let dont_reg = Regex::new(r"don't\(\)").unwrap();
     let mut numbers: Vec<(i32, i32)> = vec![];
     let mut second_numbers: Vec<(i32, i32)> = vec![];
     
     for (_, [n1, n2]) in find_mul.captures_iter(&INPUT).map(|c| c.extract()) {
         numbers.push((n1.parse::<i32>().unwrap(), n2.parse::<i32>().unwrap()));
     }
+    let mut valid = true;
     for cap in second_regex.captures_iter(&INPUT) {
-        print!("{}", cap.iter().next().unwrap().unwrap().as_str());
         let el = cap.iter().next().unwrap().unwrap().as_str();
-        for (_, [n1, n2]) in regex.captures_iter(&el).map(|c| c.extract()) {
-            second_numbers.push((n1.parse::<i32>().unwrap(), n2.parse::<i32>().unwrap()));
+        println!("--------------------");
+        if let Some(el) = do_reg.captures(&el) {
+            println!("true");
+            valid = true;
         }
+        else if let Some(el) = dont_reg.captures(&el) {
+            println!("false");
+            valid = false;
+        }  
+        else if valid == true {
+            println!("{}", el);
+            if let Some((_, [n1, n2])) = regex.captures(&el).map(|c| c.extract()) {
+                println!("{}, {}", n1, n2);
+                second_numbers.push((n1.parse::<i32>().unwrap(), n2.parse::<i32>().unwrap()));
+            }
+        }
+        println!("--------------------");
+
+
+        // let el = cap.iter().next().unwrap().unwrap().as_str();
+        
     }
     // for (_, [el]) in negative_mul.captures_iter(&INPUT).map(|c| c.extract()) {
     //     for (_, [n1, n2]) in find_mul.captures_iter(&el).map(|c| c.extract()) {
