@@ -14,7 +14,7 @@ fn main() {
         }
         input.push(line_container);
     }
-
+    //FIRST
     for (row_index, row) in input.iter().enumerate() {
         for (column_index, el) in row.iter().enumerate() {
             if el == &'X' {
@@ -79,6 +79,30 @@ fn main() {
             }
         }
     }
-
     println!("Total number is: {}", total_number);
+    //SECOND
+    let mut second_total = 0;
+    for (row_index, row) in input.iter().enumerate() {
+        for (column_index, el) in row.iter().enumerate() {
+            if el == &'A' {
+                if row_index >= 1  
+                && row_index <= input.len() - 2
+                && column_index >= 1
+                && column_index <= input[0].len() - 2{
+                    if ((input[row_index - 1][column_index - 1] == 'M'
+                    && input[row_index + 1][column_index + 1] == 'S') 
+                    || (input[row_index - 1][column_index - 1] == 'S'
+                    && input[row_index + 1][column_index + 1] == 'M'))
+                    && ((input[row_index - 1][column_index + 1] == 'M'
+                    && input[row_index + 1][column_index - 1] == 'S') 
+                    || (input[row_index - 1][column_index + 1] == 'S'
+                    && input[row_index + 1][column_index - 1] == 'M')){
+                        second_total += 1;
+                    }
+                }
+            }
+        }
+    }
+    println!("Second total is: {}", second_total);
+    
 }
