@@ -3,7 +3,6 @@ use std::io::{self, BufRead};
 use std::path::Path;
 
 enum Modes {
-    Fail,
     Unknown,
     Descending,
     Ascending
@@ -15,14 +14,17 @@ fn main() {
     if let Ok(lines) = read_lines("./input.txt") {
         for line in lines.flatten() {
             let mut prv: i32 = 0;
+            let mut prv_prv: i32 = 0;
             let mut mode: Modes = Modes::Unknown;
-            let mut skipped_first = false;
+            let mut prv_mode = 0;
+            let mut skipped = 0;
             let mut valid = true;
             let mut single_tolerant = true;
             let mut virtual_delete = false;
-            println!("Line is {}", line);
+            let mut virtually_deleted = -100;
             for el in line.split(" ") {
-                if skipped_first {
+                println!("el {}, prv {}, skipped {}, single {}, prv_m {}, prv_prv {}", el, prv, skipped, single_tolerant, prv_mode, prv_prv);
+                if skipped > 0 {
                     match mode {
                         Modes::Ascending => {
                             if el.parse::<i32>().unwrap() > prv
@@ -35,6 +37,7 @@ fn main() {
                             }
                             else {
                                 single_tolerant = false;
+                                prv_mode = 1;
                                 mode = Modes::Unknown;
                                 virtual_delete = true;
                             }
@@ -51,40 +54,54 @@ fn main() {
                             else {
                                 single_tolerant = false;
                                 mode = Modes::Unknown;
+                                prv_mode = 2;
                                 virtual_delete = true;
                             }
                         },
                         Modes::Unknown => {
-                            mode = if el.parse::<i32>().unwrap() < prv 
-                                    && prv - el.parse::<i32>().unwrap() < 4 
-                                    { Modes::Descending } 
-                                    else if el.parse::<i32>().unwrap() > prv
-                                    &&  el.parse::<i32>().unwrap() - prv < 4
-                                    { Modes::Ascending }
-                                    else { Modes::Fail }
-                        },
-                        Modes::Fail  => {
-                            if !single_tolerant {
+                            if el.parse::<i32>().unwrap() < prv 
+                            && prv - el.parse::<i32>().unwrap() < 4 
+                            && prv - el.parse::<i32>().unwrap() > 0 
+                            && (prv_mode == 2 || prv_mode == 0) { 
+                                mode = Modes::Descending 
+                            } else if el.parse::<i32>().unwrap() > prv
+                            &&  el.parse::<i32>().unwrap() - prv < 4 
+                            && el.parse::<i32>().unwrap() - prv > 0 
+                            && (prv_mode == 1 || prv_mode == 0) { 
+                                mode = Modes::Ascending; 
+                            } else if !single_tolerant { 
                                 valid = false;
                                 break;
-                            }
-                            else {
+                            } else { 
+                                match mode {
+                                    Modes::Ascending => {
+                                        //giving up...
+                                    },
+                                    Modes::Descending => {
+
+                                    },
+                                    Modes::Unknown => (),
+                                }
                                 single_tolerant = false;
-                                virtual_delete = true;
                             }
-                        }
+                        },
                     }
-                } else {
-                    skipped_first = true;
                 }
+                skipped += 1;
                 if !virtual_delete {
+                    if skipped > 1 {
+                        prv_prv = prv;
+                    }
                     prv = el.parse::<i32>().unwrap();
+                } else {
+                    virtually_deleted = el.parse::<i32>().unwrap();
                 }
                 virtual_delete = false;
-
             }
-            println!("Result was: {}", valid);
             if valid {
+                if !single_tolerant {
+                    println!("Line is {} and result {}", line, valid);
+                }
                 total_valid += 1;
             }
         }
